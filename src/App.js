@@ -15,7 +15,7 @@ function App() {
     [0, 0, 0, 0],
     [0, 0, 0, 0],
   ]);
-
+  const [gameOver, setGameOver] = useState(false);
   // Functions needed
 
   // Initialize
@@ -147,7 +147,7 @@ function App() {
     console.log("swipe down");
     console.log(data);
     let board = cloneDeep(data);
-    let oldData = JSON.parse(JSON.stringify(data));
+    let oldData = data;
     for (let i = 3; i >= 0; i--) {
       let slow = board.length - 1;
       let fast = slow - 1;
@@ -191,7 +191,7 @@ function App() {
   const swipeUp = (dummy) => {
     console.log("swipe up");
     let board = cloneDeep(data);
-    let oldData = JSON.parse(JSON.stringify(data));
+    let oldData = data;
     for (let i = 0; i < 4; i++) {
       let slow = 0;
       let fast = 1;
@@ -234,6 +234,8 @@ function App() {
 
   // Handle Key Down
   const handleKeyDown = (event) => {
+    if (gameOver) return;
+
     switch (event.keyCode) {
       case UP_ARROW:
         swipeUp();
@@ -250,10 +252,59 @@ function App() {
       default:
         break;
     }
+    let isGameOver = checkIfGameOver();
+    if (isGameOver) {
+      setGameOver(true);
+    }
   };
 
   // CheckGameOver()
+  const checkIfGameOver = () => {
+    console.log("CHECKING GAME OVER");
+    // let original = cloneDeep(data);
+    let checker = swipeLeft(true);
+
+    if (!isEqual(data, checker)) {
+      return false;
+    }
+
+    let checker2 = swipeDown(true);
+    console.log("CHECKER DOWN");
+    console.table(data);
+    console.table(checker2);
+    if (!isEqual(data, checker2)) {
+      return false;
+    }
+
+    let checker3 = swipeRight(true);
+
+    if (!isEqual(data, checker3)) {
+      return false;
+    }
+
+    let checker4 = swipeUp(true);
+
+    if (!isEqual(data, checker4)) {
+      return false;
+    }
+
+    return true;
+  };
+
   // Reset()
+  const resetGame = () => {
+    setGameOver(false);
+    const emptyGrid = [
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+    ];
+
+    spawnNewNumber(emptyGrid);
+    spawnNewNumber(emptyGrid);
+    setData(emptyGrid);
+  };
 
   useEffect(() => {
     initialize();
@@ -264,27 +315,89 @@ function App() {
   useEvent("keydown", handleKeyDown);
 
   return (
-    <div
-      style={{
-        background: "#AD9D8F",
-        width: "max-content",
-        height: "max-content",
-        margin: "auto",
-        padding: 5,
-        borderRadius: 5,
-        marginTop: 10,
-        position: "relative",
-      }}
-    >
-      {data.map((row, oneIndex) => {
-        return (
-          <div style={{ display: "flex" }} key={oneIndex}>
-            {row.map((digit, index) => (
-              <Block num={digit} key={index} />
-            ))}
+    <div className="App">
+      <div
+        style={{
+          width: 345,
+          margin: "auto",
+          marginTop: 30,
+        }}
+      >
+        <div style={{ display: "flex" }}>
+          <div
+            style={{
+              fontFamily: "sans-serif",
+              flex: 1,
+              fontWeight: "700",
+              fontSize: 60,
+              color: "#a09f93",
+            }}
+          >
+            2048
           </div>
-        );
-      })}
+          <div
+            style={{
+              flex: 1,
+              marginTop: "auto",
+            }}
+          >
+            <div onClick={resetGame} style={style.newGameButton}>
+              NEW GAME
+            </div>
+          </div>
+        </div>
+        <div
+          style={{
+            background: "#AD9D8F",
+            width: "max-content",
+            height: "max-content",
+            margin: "auto",
+            padding: 5,
+            borderRadius: 5,
+            marginTop: 10,
+            position: "relative",
+          }}
+        >
+          {gameOver && (
+            <div style={style.gameOverOverlay}>
+              <div>
+                <div
+                  style={{
+                    fontSize: 30,
+                    fontFamily: "sans-serif",
+                    fontWeight: "900",
+                    color: "#776E65",
+                  }}
+                >
+                  Game Over
+                </div>
+                <div>
+                  <div
+                    style={{
+                      flex: 1,
+                      marginTop: "auto",
+                    }}
+                  >
+                    <div onClick={resetGame} style={style.tryAgainButton}>
+                      Try Again
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {data.map((row, oneIndex) => {
+            return (
+              <div style={{ display: "flex" }} key={oneIndex}>
+                {row.map((digit, index) => (
+                  <Block num={digit} key={index} />
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
@@ -316,6 +429,40 @@ const style = {
     fontSize: 45,
     fontWeight: "800",
     color: "white",
+  },
+  newGameButton: {
+    padding: 10,
+    background: "#6699cc",
+    color: "#F8F5F0",
+    width: 95,
+    borderRadius: 7,
+    fontWeight: "900",
+    marginLeft: "auto",
+    marginBottom: "auto",
+    cursor: "pointer",
+  },
+  tryAgainButton: {
+    padding: 10,
+    background: "#6699cc",
+    color: "#F8F5F0",
+    width: 80,
+    borderRadius: 7,
+    fontWeight: "900",
+    cursor: "pointer",
+    margin: "auto",
+    marginTop: 20,
+  },
+  gameOverOverlay: {
+    position: "absolute",
+    height: "100%",
+    width: "100%",
+    left: 0,
+    top: 0,
+    borderRadius: 5,
+    background: "rgba(238,228,218,.5)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 };
 
