@@ -1,7 +1,15 @@
-# Getting Started with Create React App
+# 2048 Game Made in React
 
+![image](https://user-images.githubusercontent.com/54525904/192242605-6713b256-e37d-4da4-b78a-d59a02704660.png)
+
+*Use keyboard keys: **Up, Down, Left, Right** to control the block movement*
+
+
+
+<details>
+<summary>
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
+</summary>
 ## Available Scripts
 
 In the project directory, you can run:
@@ -68,3 +76,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+</details>
