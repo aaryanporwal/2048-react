@@ -10,7 +10,7 @@ export const useEvent = (event, handler, passive = false) => {
   });
 };
 
-export const getColors = (num) => {
+export const getBgColors = (num) => {
   switch (num) {
     case 2:
       return "#EBDCD0";

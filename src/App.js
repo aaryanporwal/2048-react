@@ -1,7 +1,6 @@
-import "./App.css";
 import { useState, useEffect } from "react";
-import cloneDeep from "lodash.clonedeep";
-import { getColors, useEvent } from "./util";
+import { cloneDeep, isEqual } from "lodash";
+import { getBgColors, useEvent } from "./util";
 
 function App() {
   // Keycodes for movements
@@ -88,7 +87,7 @@ function App() {
         }
       }
     }
-    if (JSON.stringify(oldGrid) !== JSON.stringify(newArray)) {
+    if (!isEqual(oldGrid, newArray)) {
       spawnNewNumber(newArray);
     }
     if (dummy) {
@@ -134,7 +133,7 @@ function App() {
         }
       }
     }
-    if (JSON.stringify(newArray) !== JSON.stringify(oldData)) {
+    if (!isEqual(newArray, oldData)) {
       spawnNewNumber(newArray);
     }
     if (dummy) {
@@ -179,7 +178,7 @@ function App() {
         }
       }
     }
-    if (JSON.stringify(board) !== JSON.stringify(oldData)) {
+    if (!isEqual(board, oldData)) {
       spawnNewNumber(board);
     }
     if (dummy) {
@@ -223,7 +222,7 @@ function App() {
         }
       }
     }
-    if (JSON.stringify(oldData) !== JSON.stringify(board)) {
+    if (!isEqual(board, oldData)) {
       spawnNewNumber(board);
     }
     if (dummy) {
@@ -296,7 +295,7 @@ const Block = ({ num }) => {
     <div
       style={{
         ...blockStyle,
-        background: getColors(num),
+        background: getBgColors(num),
         color: num === 2 || num === 4 ? "#645B52" : "#F7F4EF",
       }}
     >
